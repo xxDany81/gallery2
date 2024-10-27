@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galerie Imagini PcBack</title>
     <style>
+        /* Stilurile rămân neschimbate */
         body {
             font-family: 'Arial', sans-serif;
             background: url('https://xatimg.com/image/HyYWMau5wJMA.png') no-repeat center center fixed;
@@ -16,19 +17,17 @@
             min-height: 100vh;
             overflow-y: auto;
         }
-
         h1 {
             margin-top: 20px;
-            color: #005B9A; /* Darker Sky Blue */
-            text-shadow: 0 0 10px rgba(0, 91, 154, 0.7); /* Darker Sky Blue Glow */
+            color: #005B9A;
+            text-shadow: 0 0 10px rgba(0, 91, 154, 0.7);
             font-size: 3em;
             font-weight: bold;
-            background: linear-gradient(135deg, #005B9A, #87CEEB); /* Sky Blue Gradient */
+            background: linear-gradient(135deg, #005B9A, #87CEEB);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: textGlow 1.5s ease-in-out infinite;
         }
-
         .gallery {
             display: flex;
             flex-wrap: wrap;
@@ -36,44 +35,38 @@
             gap: 20px;
             margin: 20px;
         }
-
         .gallery-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            border: 2px solid #FFFFFF; /* White */
+            border: 2px solid #FFFFFF;
             padding: 10px;
-            background-color: rgba(255, 255, 255, 0.8); /* White */
+            background-color: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(135, 206, 235, 0.7); /* Sky Blue Glow */
+            box-shadow: 0 0 20px rgba(135, 206, 235, 0.7);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            width: calc(50% - 40px); /* Două imagini pe rând */
+            width: calc(50% - 40px);
         }
-
         .gallery-item:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(135, 206, 235, 1); /* Stronger Sky Blue Glow */
+            box-shadow: 0 0 30px rgba(135, 206, 235, 1);
         }
-
         .gallery-item img {
             width: 100%;
             height: auto;
             border-radius: 10px;
             transition: opacity 0.5s ease;
         }
-
         .gallery-item img:hover {
             opacity: 0.8;
         }
-
         .name {
             margin-top: 5px;
-            color: #005B9A; /* Darker Sky Blue */
+            color: #005B9A;
             font-weight: bold;
             font-size: 1.1em;
-            text-shadow: 0 0 5px rgba(0, 91, 154, 0.7); /* Darker Sky Blue Glow */
+            text-shadow: 0 0 5px rgba(0, 91, 154, 0.7);
         }
-
         @keyframes textGlow {
             0% { text-shadow: 0 0 5px rgba(0, 91, 154, 0.5); }
             50% { text-shadow: 0 0 15px rgba(0, 91, 154, 1); }
@@ -87,34 +80,40 @@
 <div id="pcback-gallery" class="gallery"></div>
 
 <script>
-    function loadImages() {
-        const imageNames = ['pcback1.png', 'pcback2.png'];  // Adăugăm manual imaginile
+    async function loadImages() {
+        try {
+            // Se obține lista de imagini de la un server backend (de exemplu, PHP, Node.js)
+            const response = await fetch('/get-pcback-images'); // Endpoint pentru a obține lista imaginilor
+            const imageNames = await response.json();
 
-        const gallery = document.getElementById('pcback-gallery');
-        gallery.innerHTML = ''; // Golim galeria
+            const gallery = document.getElementById('pcback-gallery');
+            gallery.innerHTML = ''; // Golim galeria
 
-        imageNames.forEach((imageName, index) => {
-            const imgItem = document.createElement('div');
-            imgItem.classList.add('gallery-item');
+            imageNames.forEach((imageName, index) => {
+                const imgItem = document.createElement('div');
+                imgItem.classList.add('gallery-item');
 
-            // Creăm elementul img
-            const img = document.createElement('img');
-            img.src = `pcback/${imageName}`;  // Asigurăm calea corectă către folderul local 'pcback'
-            img.alt = `pcback${index + 1}`;
+                // Creăm elementul img
+                const img = document.createElement('img');
+                img.src = `pcback/${imageName}`;  // Asigurăm calea corectă către folderul 'pcback'
+                img.alt = `pcback${index + 1}`;
 
-            // Afișăm numele imaginii
-            const name = document.createElement('div');
-            name.classList.add('name');
-            name.textContent = `pcback ${index + 1}`;
+                // Afișăm numele imaginii
+                const name = document.createElement('div');
+                name.classList.add('name');
+                name.textContent = `pcback ${index + 1}`;
 
-            // Adaugă imaginea și numele la galerie
-            imgItem.appendChild(img);
-            imgItem.appendChild(name);
-            gallery.appendChild(imgItem);
-        });
+                // Adaugă imaginea și numele la galerie
+                imgItem.appendChild(img);
+                imgItem.appendChild(name);
+                gallery.appendChild(imgItem);
+            });
 
-        // Derulăm automat la ultima imagine
-        scrollToBottom();
+            // Derulăm automat la ultima imagine după încărcare
+            scrollToBottom();
+        } catch (error) {
+            console.error("Eroare la încărcarea imaginilor:", error);
+        }
     }
 
     function scrollToBottom() {
