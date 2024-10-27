@@ -80,40 +80,35 @@
 <div id="pcback-gallery" class="gallery"></div>
 
 <script>
-    async function loadImages() {
-        try {
-            // Se obține lista de imagini de la un server backend (de exemplu, PHP, Node.js)
-            const response = await fetch('/get-pcback-images'); // Endpoint pentru a obține lista imaginilor
-            const imageNames = await response.json();
+    function loadImages() {
+        // Lista de imagini pentru testare, de exemplu
+        const imageNames = ['pcback1.png', 'pcback2.png', 'pcback3.png']; 
 
-            const gallery = document.getElementById('pcback-gallery');
-            gallery.innerHTML = ''; // Golim galeria
+        const gallery = document.getElementById('pcback-gallery');
+        gallery.innerHTML = ''; // Golim galeria
 
-            imageNames.forEach((imageName, index) => {
-                const imgItem = document.createElement('div');
-                imgItem.classList.add('gallery-item');
+        imageNames.forEach((imageName, index) => {
+            const imgItem = document.createElement('div');
+            imgItem.classList.add('gallery-item');
 
-                // Creăm elementul img
-                const img = document.createElement('img');
-                img.src = `pcback/${imageName}`;  // Asigurăm calea corectă către folderul 'pcback'
-                img.alt = `pcback${index + 1}`;
+            // Creăm elementul img
+            const img = document.createElement('img');
+            img.src = `pcback/${imageName}`;  // Asigurăm calea corectă către folderul 'pcback'
+            img.alt = `pcback${index + 1}`;
 
-                // Afișăm numele imaginii
-                const name = document.createElement('div');
-                name.classList.add('name');
-                name.textContent = `pcback ${index + 1}`;
+            // Afișăm numele imaginii
+            const name = document.createElement('div');
+            name.classList.add('name');
+            name.textContent = `pcback ${index + 1}`;
 
-                // Adaugă imaginea și numele la galerie
-                imgItem.appendChild(img);
-                imgItem.appendChild(name);
-                gallery.appendChild(imgItem);
-            });
+            // Adaugă imaginea și numele la galerie
+            imgItem.appendChild(img);
+            imgItem.appendChild(name);
+            gallery.appendChild(imgItem);
+        });
 
-            // Derulăm automat la ultima imagine după încărcare
-            scrollToBottom();
-        } catch (error) {
-            console.error("Eroare la încărcarea imaginilor:", error);
-        }
+        // Derulăm automat la ultima imagine
+        scrollToBottom();
     }
 
     function scrollToBottom() {
