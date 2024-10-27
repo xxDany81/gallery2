@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,22 +33,22 @@
 
         .gallery {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            flex-direction: column; /* Fiecare imagine pe un rând nou */
+            align-items: center;
             gap: 20px;
             margin: 20px;
+            width: 100%;
         }
 
         .gallery-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border: 2px solid #FFFFFF;
-            padding: 10px;
+            width: 100%; /* Ocupă întreaga lățime a containerului */
+            max-width: 800px; /* Limitează lățimea maximă pentru imagini foarte mari */
             background-color: rgba(255, 255, 255, 0.8);
+            border: 2px solid #FFFFFF;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(135, 206, 235, 0.7);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 10px;
         }
 
         .gallery-item:hover {
@@ -55,8 +57,8 @@
         }
 
         .gallery-item img {
-            width: 100px;
-            height: 100px;
+            width: 100%; /* Păstrează proporțiile originale */
+            height: auto;
             border-radius: 10px;
             transition: opacity 0.5s ease;
         }
@@ -71,6 +73,7 @@
             font-weight: bold;
             font-size: 1.1em;
             text-shadow: 0 0 5px rgba(0, 91, 154, 0.7);
+            text-align: center;
         }
 
         @keyframes textGlow {
