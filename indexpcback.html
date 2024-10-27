@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galerie Imagini PcBack</title>
     <style>
-        /* Stilurile rămân neschimbate */
         body {
             font-family: 'Arial', sans-serif;
             background: url('https://xatimg.com/image/HyYWMau5wJMA.png') no-repeat center center fixed;
@@ -80,35 +79,40 @@
 <div id="pcback-gallery" class="gallery"></div>
 
 <script>
-    function loadImages() {
-        // Lista de imagini pentru testare, de exemplu
-        const imageNames = ['pcback1.png', 'pcback2.png', 'pcback3.png']; 
+    async function loadImages() {
+        try {
+            // Solicităm lista de imagini de la server
+            const response = await fetch('/get-pcback-images');
+            const imageNames = await response.json();
 
-        const gallery = document.getElementById('pcback-gallery');
-        gallery.innerHTML = ''; // Golim galeria
+            const gallery = document.getElementById('pcback-gallery');
+            gallery.innerHTML = ''; // Golim galeria
 
-        imageNames.forEach((imageName, index) => {
-            const imgItem = document.createElement('div');
-            imgItem.classList.add('gallery-item');
+            imageNames.forEach((imageName, index) => {
+                const imgItem = document.createElement('div');
+                imgItem.classList.add('gallery-item');
 
-            // Creăm elementul img
-            const img = document.createElement('img');
-            img.src = `pcback/${imageName}`;  // Asigurăm calea corectă către folderul 'pcback'
-            img.alt = `pcback${index + 1}`;
+                // Creăm elementul img
+                const img = document.createElement('img');
+                img.src = `pcback/${imageName}`;  // Asigurăm calea corectă către folderul 'pcback'
+                img.alt = `pcback${index + 1}`;
 
-            // Afișăm numele imaginii
-            const name = document.createElement('div');
-            name.classList.add('name');
-            name.textContent = `pcback ${index + 1}`;
+                // Afișăm numele imaginii
+                const name = document.createElement('div');
+                name.classList.add('name');
+                name.textContent = `pcback ${index + 1}`;
 
-            // Adaugă imaginea și numele la galerie
-            imgItem.appendChild(img);
-            imgItem.appendChild(name);
-            gallery.appendChild(imgItem);
-        });
+                // Adaugă imaginea și numele la galerie
+                imgItem.appendChild(img);
+                imgItem.appendChild(name);
+                gallery.appendChild(imgItem);
+            });
 
-        // Derulăm automat la ultima imagine
-        scrollToBottom();
+            // Derulăm automat la ultima imagine după încărcare
+            scrollToBottom();
+        } catch (error) {
+            console.error("Eroare la încărcarea imaginilor:", error);
+        }
     }
 
     function scrollToBottom() {
@@ -119,6 +123,42 @@
     }
 
     loadImages();
+</script>
+
+<script>
+    // Node.js server embedded in HTML (this works only if supported by the environment, such as Electron or Node-compatible setups)
+    (() => {
+        const express = require('express');
+        const fs = require('fs');
+        const path = require('path');
+
+        const app = express();
+        const PORT = 3000;
+
+        // Setăm folderul pcback
+        const pcbackFolder = path.join(__dirname, 'pcback');
+
+        // Endpoint pentru a trimite lista de fișiere din folderul pcback
+        app.get('/get-pcback-images', (req, res) => {
+            fs.readdir(pcbackFolder, (err, files) => {
+                if (err) {
+                    console.error("Eroare la citirea folderului:", err);
+                    return res.status(500).send('Eroare la citirea folderului');
+                }
+                
+                // Filtrăm fișierele pentru a include doar imagini (de ex., .png, .jpg, etc.)
+                const imageFiles = files.filter(file => /\.(png|jpg|jpeg|gif)$/i.test(file));
+                res.json(imageFiles);
+            });
+        });
+
+        // Servim fișiere statice din folderul curent pentru testare
+        app.use(express.static(__dirname));
+
+        app.listen(PORT, () => {
+            console.log(`Serverul rulează pe http://localhost:${PORT}`);
+        });
+    })();
 </script>
 
 </body>
